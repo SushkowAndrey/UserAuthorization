@@ -3,6 +3,7 @@ using static ConsoleApp1.Menu;
 using static ConsoleApp1.InputClass;
 using static ConsoleApp1.DBConnect;
 using static ConsoleApp1.AccountModel;
+using System.IO;
 
 namespace ConsoleApp1
 {
@@ -41,18 +42,43 @@ namespace ConsoleApp1
                         int countRow = dbCountRow.CountRow();
                         var resUsers = InputUser();
                         var resAccount = InputAccount();
-                        DBConnect dbRegistrationAccount = new DBConnect();
-                        DBConnect dbRegistrationUser = new DBConnect();
-                        if(dbRegistrationAccount.RegistrationAccount(resAccount.login, resAccount.password)&&dbRegistrationUser.RegistrationUser(resUsers.name, resUsers.email, resUsers.phone, resUsers.dateBirth,countRow+1))
-                            Console.WriteLine("Пользователь зарегистрирован");
-                        else Console.WriteLine("Пользователь НЕ зарегистрирован");
+                        DBConnect CheckLogin = new DBConnect();
+                        if (CheckLogin.CheckLogin(resAccount.login))
+                        {
+                            DBConnect dbRegistrationAccount = new DBConnect();
+                            DBConnect dbRegistrationUser = new DBConnect();
+                            if (dbRegistrationAccount.RegistrationAccount(resAccount.login, resAccount.password) &&
+                                dbRegistrationUser.RegistrationUser(resUsers.name, resUsers.email, resUsers.phone,
+                                    resUsers.dateBirth, countRow + 1))
+                                Console.WriteLine("Пользователь зарегистрирован");
+                            else Console.WriteLine("Пользователь НЕ зарегистрирован");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Пользователь уже зарегистрирован");
+                        }
                     }
                         break;
                     case 3: //Восстановление пароля
                     {
                         Console.Clear();
-                        InputLogin();
-
+                        var login =InputLogin();//ввод логина
+                        Random rnd = new Random();
+                        int value = rnd.Next(1000, 9999);
+                        StreamWriter file = new StreamWriter("D:\\Programing\\UserAuthorization\\Random.txt");
+                        file.Write(value);
+                        file.Close();
+                        int num = InputRandValue();//ввод числа
+                        if (num == value)
+                        {
+                            var password = InputNewPassword();//ввод нового пароля
+                            DBConnect dbChangePassword = new DBConnect();
+                            dbChangePassword.NewPassword(login, password);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Введенный код не верный");
+                        }
                     }
                         break;
                 }

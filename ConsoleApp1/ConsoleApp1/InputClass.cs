@@ -24,12 +24,23 @@ namespace ConsoleApp1
             string phone = Console.ReadLine();
             return (name, dateBirth, email, phone);
         }
-
         public static string InputLogin()
         {
             Console.WriteLine("Введите логин");
             string login = Console.ReadLine();
             return login;
+        }
+        public static string InputNewPassword()
+        {
+            Console.WriteLine("Введите новый пароль");
+            string passwors = Console.ReadLine();
+            return passwors;
+        }
+        public static int InputRandValue()
+        {
+            Console.WriteLine("Введите число из файла");
+            int randValue = Convert.ToInt32(Console.ReadLine());
+            return randValue;
         }
     }
 }
